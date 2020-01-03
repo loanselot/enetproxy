@@ -13,3 +13,7 @@
 * Has a PoC OnSpawn modifier which appends netid to each players' name
 * Can both intercept outgoing and incoming packets
 * Integrated http server
+
+![x](https://i.imgur.com/Lndhj70.png "Proxy pic 1")
+
+Video: https://streamable.com/bhokj
