@@ -57,8 +57,6 @@ bool connecting = false;
 bool ingame = false;
 void server::poll()
 {
-	bool pressed = GetAsyncKeyState(VK_F6);
-
 	ENetEvent evt;
 	while (enet_host_service(m_proxy_server, &evt, 0) > 0) {
 		m_gt_peer = evt.peer;
