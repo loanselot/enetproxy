@@ -31,7 +31,7 @@ void server::start()
 
 int m_user = 0;
 int m_token = 0;
-std::string m_server = "209.59.191.86";
+std::string m_server = "209.59.191.76";
 int m_port = 17093;
 int m_netid = -1;
 
@@ -42,6 +42,7 @@ void on_disconnect(bool reset) {
 		enet_peer_disconnect(m_server_peer, 0);
 		m_server_peer = nullptr;
 	}
+	//TODO: fix disconnect bug cuz of ping request ignoring
 	/*if (m_real_server) {
 		enet_host_destroy(m_real_server);
 		m_real_server = nullptr;
@@ -49,7 +50,7 @@ void on_disconnect(bool reset) {
 	if (reset) {
 		m_user = 0;
 		m_token = 0;
-		m_server = "209.59.191.86";
+		m_server = "209.59.191.76";
 		m_port = 17093;
 	}
 }
@@ -116,18 +117,10 @@ void server::poll()
 
 				}
 				else if (packet->m_type == PACKET_DISCONNECT) {
+					//TODO: fix ping request ignore
 					return;
 				}
 			}
-			/*switch (packet_type) {
-			case 2: g_gameserver->on_text_packet(evt.peer, evt.packet); break;
-			case 3: g_gameserver->on_asap_packet(evt.peer, evt.packet); break;
-			case 4: g_gameserver->on_game_packet(evt.peer, evt.packet); break;
-			case 8: g_gameserver->on_client_log(evt.peer, evt.packet); break;
-			case 0:
-			default: LOG_WARNING("unknown packet type %d\n", packet_type); break;
-			}*/
-
 			enet_peer_send(m_server_peer, 0, evt.packet);
 			if (m_real_server)
 				enet_host_flush(m_real_server);
@@ -227,9 +220,7 @@ void server::poll()
 								utils::send(m_gt_peer, m_proxy_server, varlist, -1, -1);
 								break;
 							}
-
 						}
-
 					}
 				}
 			}
