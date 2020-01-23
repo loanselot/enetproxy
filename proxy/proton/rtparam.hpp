@@ -2,6 +2,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "../utils.h"
 
 class rtvar {
    public:

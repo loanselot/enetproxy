@@ -104,7 +104,10 @@ void http::start()
 	}
 }
 
+#ifdef _WIN32
 #include <Windows.h>
+#endif
+
 void util_sleep(int32_t ms) {
 #ifdef _WIN32
 	Sleep(ms);

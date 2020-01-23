@@ -1,6 +1,5 @@
 #pragma once
 #include "server.h"
-#include <Windows.h>
 #include <iostream>
 #include "enet/include/enet.h"
 #include "proton/rtparam.hpp"
@@ -27,6 +26,7 @@ void server::start() {
     PRINTS("started the enet server.\n");
 }
 
+//TODO: move
 int m_user = 0;
 int m_token = 0;
 std::string m_server = "209.59.191.76";
@@ -75,11 +75,37 @@ void server::poll() {
             } break;
             case ENET_EVENT_TYPE_RECEIVE: {
                 int packet_type = get_packet_type(evt.packet);
-                PRINTS("packet type: %d\n", packet_type);
-
                 switch (packet_type) {
-                    case NET_MESSAGE_GENERIC_TEXT: break;
-                    case NET_MESSAGE_GAME_MESSAGE: break;
+                    case NET_MESSAGE_GENERIC_TEXT: {
+                        auto text = utils::get_text(evt.packet);
+                        std::string packet = text;
+                        PRINTS("Generic text: %s\n", packet.c_str());
+
+                        if (packet.find("|text|/name ") != -1) { //TODO: fix ghetto
+                            std::string name = "`2" + packet.substr(packet.find("/name ") + 5);
+
+                            variantlist_t va{ "OnNameChanged" };
+                            va[1] = name;
+                            utils::send(m_gt_peer, m_proxy_server, va, m_netid, -1);
+                            std::string acti = ("action|log\nmsg|name set to: " + name);
+                            utils::send(m_gt_peer, m_proxy_server, 3, (uint8_t*)acti.c_str(), acti.length());
+                            enet_packet_destroy(evt.packet);
+                            return;
+                        }
+                        if (packet.find("game_version|2.996") != -1) {
+                            utils::replace(packet, "2.996", "3");
+                            ingame = false;
+                            PRINTS("Spoofing gt version\n");
+                            utils::send(m_server_peer, m_real_server, 2, (uint8_t*)packet.c_str(), packet.length());
+                            enet_packet_destroy(evt.packet);
+                            return;
+                        }
+                    } break;
+                    case NET_MESSAGE_GAME_MESSAGE: {
+                        auto text = utils::get_text(evt.packet);
+                        std::string packet = text;
+                        PRINTS("Game message: %s\n", packet.c_str());
+                    } break;
                     case NET_MESSAGE_GAME_PACKET: {
                         auto packet = utils::get_struct(evt.packet);
                         if (!packet)
@@ -95,31 +121,13 @@ void server::poll() {
                             return;
                         }
                     } break;
+                    case NET_MESSAGE_CLIENT_LOG_RESPONSE: {
+                        PRINTS("Sending crash log to server.\n");
+                    } break;
+
+                    default: PRINTS("Got unknown packet of type %d.\n", packet_type); break;
                 }
-                if (packet_type == 2 || packet_type == 3) {
-                    auto text = utils::get_text(evt.packet);
-                    std::string packet = text;
-                    PRINTS("packet: %s\n", packet.c_str());
-                    if (packet.find("|text|/name ") != -1) {
-                        variantlist_t meme{ "OnNameChanged" };
-                        PRINTC("netid is: %d\n", m_netid);
-                        std::string name = "`2" + packet.substr(packet.find("/name ") + 5);
-                        meme[1] = name;
-                        utils::send(m_gt_peer, m_proxy_server, meme, m_netid, -1);
-                        std::string acti = ("action|log\nmsg|name set to: " + name);
-                        utils::send(m_gt_peer, m_proxy_server, 3, (uint8_t*)acti.c_str(), acti.length());
-                        enet_packet_destroy(evt.packet);
-                        return;
-                    }
-                    if (packet.find("game_version|2.996") != -1) {
-                        utils::replace(packet, "2.996", "3.00");
-                        ingame = false;
-                        PRINTS("Spoofing gt version\n");
-                        utils::send(m_server_peer, m_real_server, 2, (uint8_t*)packet.c_str(), packet.length());
-                        enet_packet_destroy(evt.packet);
-                        return;
-                    }
-                }
+
                 enet_peer_send(m_server_peer, 0, evt.packet);
                 if (m_real_server)
                     enet_host_flush(m_real_server);
