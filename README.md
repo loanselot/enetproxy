@@ -1,7 +1,5 @@
 # Growtopia enet proxy
 
-### Untested on linux, includes windows.h and might need editing to go cross-platform
-
 ## How to use
 * Does not need separate http server
 * Use HxD or similar to edit "growtopia1.com" and "growtopia2.com" to "localhost" In growtopia binary.
@@ -23,7 +21,6 @@
 * Support more gamepacket types
 * Support subserver redirection (OnSendToServer) - actually no clue if this works already
 * Ignore tracking packets (and maybe print them)
-* Linux support
 
 
 ### Video: https://streamable.com/bhokj  
