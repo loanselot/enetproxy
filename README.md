@@ -1,7 +1,5 @@
 # Growtopia enet proxy
 
-### Untested on linux, includes windows.h and might need editing to go cross-platform
-
 ## How to use
 * Does not need separate http server
 * Use HxD or similar to edit "growtopia1.com" and "growtopia2.com" to "localhost" In growtopia binary.
@@ -13,18 +11,28 @@
 * Print all text packets
 * Supports modifying, ignoring, and making new packets
 * Has a PoC /name name command to call OnNameChanged function for local client.
-* Has a PoC OnSpawn modifier which appends netid to each players' name
+* Has a PoC OnSpawn modifier which appends netid to each players' name, and gives you unlim zoom
 * Can both intercept outgoing and incoming packets
 * Integrated http server
+* Ignore tracking packets and crash log requests
+* Ignore autoban packets (NOTE: you can still get autobanned if the check is serversided)
+* Works with subserver switching
 
 ## TODO
-* Don't ignore disconnect packets & disconnect events due to not responding to ping request packet with ping reply, it needs to be implemented asap
-* Clean code
 * Support more gamepacket types
-* Support subserver redirection (OnSendToServer) - actually no clue if this works already
-* Ignore tracking packets (and maybe print them)
-* Linux support
+* Automatically solve captcha
+* More commands
+* send set state to change gravity, speed, other things
 
+## Changelog
+# 1.1
+* Subserver switching should work, apparently there was no problem in the first place as the implementation worked already
+* Edit ping requests always to be non offensive behavior
+* Ignore autoban packets sent by client
+* Ignore tracking packets
+* Ignore crash logs that would be sent to gt
+* Clean code
+* Gives unlimited zoom
 
 ### Video: https://streamable.com/bhokj  
 
