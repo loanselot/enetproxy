@@ -1,5 +1,7 @@
 # Growtopia enet proxy
 
+# NOTE: This is not an internal cheat. The internals which have popped up for sale are not internal cheats but proxies based on this one, don't fall for their scam
+
 ## How to use
 * Does not need separate http server
 * Use HxD or similar to edit "growtopia1.com" and "growtopia2.com" to "localhost" In growtopia binary.
