@@ -230,7 +230,8 @@ void handle_incoming() {
                                             auto onlineid = var.find("onlineID");
 
                                             if (name && netid && onlineid) {
-                                                name->m_values[0] += " `4[" + netid->m_value + "]``";
+                                                if (var.find("invis")->m_value != "1")
+                                                    name->m_values[0] += " `4[" + netid->m_value + "]``";
 
                                                 if (meme.find("type|local") != -1) {
                                                     //set mod state to 1 (allows infinite zooming, this doesnt ban cuz its only the zoom not the actual long punch)
