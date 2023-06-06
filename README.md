@@ -1,5 +1,6 @@
 # Growtopia enet proxy
-
+# Discord Server
+(https://discord.gg/7TamzZ2rHs)
 # NOTE: This is not an internal cheat. The internals which have popped up for sale are not internal cheats but proxies based on this one, don't fall for their scam
 
 ## How to use
